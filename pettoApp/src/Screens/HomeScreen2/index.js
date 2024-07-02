@@ -1,6 +1,17 @@
-import React from 'react';
-import {View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  SectionList,
+} from 'react-native';
 import ImagePath from '../../constants/ImagePath';
+import ApiDataService from '../../services/ApiDataService';
+// import {shouldUseActivityState} from 'react-native-screens';
+import { UseSelector,DispatchProp, useDispatch, useSelector } from 'react-redux';
+import { setProfileData } from '../../redux';
 
 const Populardata = [
   {
@@ -69,6 +80,34 @@ const superdata = [
 ];
 
 const HomeScreen2 = ({navigation}) => {
+
+const dispatch = useDispatch();
+const Profilestate = useSelector((state)=>state.ProfileReducer.data);
+
+
+  const [petcategory, setpetcategory] = useState(' ');
+
+  const [popularfoods, setpopularfoods] = useState(' ');
+
+  const [popularshampoo, setpopularshampoo] = useState(' ');
+
+  const [otherproducts, setotherproduct] = useState(' ');
+
+
+
+
+  const gethomedetail = () => {
+    let url = `home/`;
+    ApiDataService.GetTokenapi(url)
+      .then(response => {
+        console.log('response------------>',response)
+        setpetcategory(response.data.pet_category);
+        setpopularfoods(response.data.popular_foods);
+        setpopularshampoo(response.data.popular_shampoo);
+        setotherproduct(response.data.other_products);
+      })
+      .catch(e => {});
+  };
   return (
     <View style={{backgroundColor: 'white', flex: 1, paddingBottom: '-20%'}}>
       <View
@@ -114,10 +153,11 @@ const HomeScreen2 = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <FlatList
+        style={{marginBottom: '-35%'}}
         data={[{name: 'cdhchd'}]}
         renderItem={({item}) => (
           <>
-            <View style={{left: 22, marginRight: 90, top: -5}}>
+            <View style={{left: 22, marginRight: 60, top: -5}}>
               <Text style={{fontSize: 25, fontWeight: '700', color: '#1F272D'}}>
                 Find best products for your pet
               </Text>
@@ -444,7 +484,7 @@ const HomeScreen2 = ({navigation}) => {
         )}
       />
 
-      <View style={{top: -80, left: 175}}>
+      <View style={{top: -10, left: 160}}>
         <TouchableOpacity>
           <View
             style={{

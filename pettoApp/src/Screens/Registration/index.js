@@ -1,98 +1,112 @@
-import React, { useState } from 'react';
-import {Image, View, Text, TextInput, TouchableOpacity,ActivityIndicator} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Image,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import ImagePath from '../../constants/ImagePath';
 import ApiDataService from '../../services/ApiDataService';
+import ButtonField from '../../helper/ButtonField';
 
 let genderdata = [
-  { name: 'Male', value: 'Male', id: 1 },
-  { name: 'Female', value: 'Female', id: 2 },
-]
+  {name: 'Male', value: 'Male', id: 1},
+  {name: 'Female', value: 'Female', id: 2},
+];
 
-const Registration = ({navigation,route}) => {
-  const phonenumber = route?.params?.phonenumber
+const Registration = ({navigation, route}) => {
+  const phonenumber = route?.params?.phonenumber;
 
-  const [inputname,setinputname]= useState(
-    {
-      name:null,
-      message:'',
-      isvalid:false
-    }
-  )
-  const [inputemail,setinputemail]= useState(
-    {
-      name:null,
-      message:'',
-      isvalid:false
-    }
-  )
+  const [inputname, setinputname] = useState({
+    name: null,
+    message: '',
+    isvalid: false,
+  });
+  const [inputemail, setinputemail] = useState({
+    name: null,
+    message: '',
+    isvalid: false,
+  });
 
-  const [gendertype,setgendertype]= useState('');
-  const [genderid,setgenderid] = useState('');
-  const [loading,setloading]=useState(false);
+  const [gendertype, setgendertype] = useState('');
+  const [genderid, setgenderid] = useState('');
+  const [loading, setloading] = useState(false);
   const [btndisable, setbtndisable] = useState(false);
 
-
-
-  
-  const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const validatename = (_in) => {
-      try {
-          setinputname(prev => ({ ...prev, value: _in }));
-          if (!_in) {
-              setinputname(prev => ({ ...prev, isValid: true, message: "Please enter your name" }));
-              setbtndisable(false)
-          }
-          else if (_in.length === 0) {
-              setinputname(prev => ({ ...prev, isValid: true, message: "Please enter your name" }));
-              setbtndisable(false)
-
-          }
-          else {
-              setinputname(prev => ({ ...prev, isValid: false, message: '' }));
-              setbtndisable(true)
-
-          }
-      } catch (error) {
+  const emailReg =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const validatename = _in => {
+    try {
+      setinputname(prev => ({...prev, value: _in}));
+      if (!_in) {
+        setinputname(prev => ({
+          ...prev,
+          isValid: true,
+          message: 'Please enter your name',
+        }));
+        setbtndisable(false);
+      } else if (_in.length === 0) {
+        setinputname(prev => ({
+          ...prev,
+          isValid: true,
+          message: 'Please enter your name',
+        }));
+        setbtndisable(false);
+      } else {
+        setinputname(prev => ({...prev, isValid: false, message: ''}));
+        setbtndisable(true);
       }
-  }
-  const validateemail = (_in) => {
-      try {
-          setinputemail(prev => ({ ...prev, value: _in }));
-          if (!_in) {
-              setinputemail(prev => ({ ...prev, isValid: true, message: "Please enter email" }));
-          }
-          else if (_in.length === 0) {
-              setinputemail(prev => ({ ...prev, isValid: true, message: "Please enter email" }));
-          }
-          else if (!emailReg.test(_in.toLocaleLowerCase())) {
-              setinputemail(prev => ({ ...prev, isValid: true, message: "Please enter valid email" }));
-          }
-          else {
-              setinputemail(prev => ({ ...prev, isValid: false, message: '' }));
-          }
-      } catch (error) {
+    } catch (error) {}
+  };
+  const validateemail = _in => {
+    try {
+      setinputemail(prev => ({...prev, value: _in}));
+      if (!_in) {
+        setinputemail(prev => ({
+          ...prev,
+          isValid: true,
+          message: 'Please enter email',
+        }));
+      } else if (_in.length === 0) {
+        setinputemail(prev => ({
+          ...prev,
+          isValid: true,
+          message: 'Please enter email',
+        }));
+      } else if (!emailReg.test(_in.toLocaleLowerCase())) {
+        setinputemail(prev => ({
+          ...prev,
+          isValid: true,
+          message: 'Please enter valid email',
+        }));
+      } else {
+        setinputemail(prev => ({...prev, isValid: false, message: ''}));
       }
-  }
+    } catch (error) {}
+  };
   const signupsubmit = () => {
     let body = {
-        name: inputname.value,
-        email: inputemail.value,
-        gender: gendertype,
-        // status: true
-    }
-    setloading(true)
-    ApiDataService.putapi('user/',body).then(response=>{
-setloading(false)
-      console.log("response----------->",response.data)
-      navigation.navigate('ProfileImage');
-    }).catch(e=>{
-      setloading(false)
-      console.log('e------>',e)
-    })
-  }
+      name: inputname.value,
+      email: inputemail.value,
+      gender: gendertype,
+      // status: true
+    };
+    console.log(body);
+    setloading(true);
+    ApiDataService.putapi('user/', body)
+      .then(response => {
+        setloading(false);
+        console.log('response----------->', response.data);
+        navigation.navigate('ProfileImage');
+      })
+      .catch(e => {
+        setloading(false);
+        console.log('e------>', e);
+      });
+  };
 
-
- 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: 'white'}}>
       <View>
@@ -145,17 +159,16 @@ setloading(false)
             source={ImagePath.bharat}
           />
 
-<Text
+          <Text
             style={{
               fontSize: 14,
               fontWeight: '400',
               color: '#1F272D',
               top: -15,
               left: 50,
-
             }}>
-           +91
-            </Text>
+            +91
+          </Text>
           <Text
             style={{
               fontSize: 14,
@@ -164,10 +177,9 @@ setloading(false)
               top: 0,
               left: 0,
             }}>
-              {phonenumber}
-            </Text>
-            
-          
+            {phonenumber}
+          </Text>
+
           <TouchableOpacity>
             <Text
               style={{
@@ -215,7 +227,9 @@ setloading(false)
             }}
             placeholder="Esther Howard"
             placeholderTextColor={'#A9A9AA'}
-            onChangeText={(text) =>{validatename (text)} }
+            onChangeText={text => {
+              validatename(text);
+            }}
             value={inputname.value}
             type={'text'}
           />
@@ -256,9 +270,12 @@ setloading(false)
             placeholder="example@example.com"
             placeholderTextColor={'#A9A9AA'}
             value={inputemail.value}
-            onChange={(text)=>{validateemail(text)}}
-            type='email'
-            
+            onChangeText={text => {
+              validateemail(text);
+            }}
+            type={'text'}
+            sectext='false'
+            errorText={inputemail.message}
           />
         </View>
       </View>
@@ -294,33 +311,26 @@ setloading(false)
               color: '#A9A9AA',
               left: 13,
             }}
-            
-  
-
-
-              data={genderdata}
-              maxHeight={300}
-              labelField="name"
-              valueField="name"
-              placeholder="Select"
-              placeholderTextColor='#A9A9AA'
-              value={gendertype}
-              onChange={item => {
-                  setgendertype(item.name);
-                  setgenderid(item.id)
+            data={genderdata}
+            maxHeight={300}
+            labelField="name"
+            valueField="name"
+            placeholder="Select"
+            placeholderTextColor="#A9A9AA"
+            value={gendertype}
+            onChange={item => {
+              setgendertype(item.name);
+              setgenderid(item.id);
             }}
-
           />
           <Image
             style={{height: 8, width: 13, left: 280, top: -26}}
             source={ImagePath.air}
           />
         </View>
-
-
       </View>
 
-      <TouchableOpacity onPress={()=>signupsubmit()}>
+      {/* <TouchableOpacity onPress={() => signupsubmit()}>
         <View
           style={{
             borderBottomWidth: 1,
@@ -344,9 +354,12 @@ setloading(false)
             Next
           </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity>  */}
+      <View style={{marginTop: 165}}>
+        <ButtonField label={'Next'} onPress={() => signupsubmit()} />
+      </View>
 
-      <View style={{top: -20}}>
+      <View style={{top: -180}}>
         <Text
           style={{
             fontSize: 13,

@@ -53,7 +53,7 @@ const ProfileImage = ({navigation}) => {
       </View>
 
       <TouchableOpacity style={{marginTop:130}} >
-        <ButtonField label={'Next'} onPress={()=>navigation.navigate('OtpVerification')} />
+        <ButtonField label={'Next'} onPress={()=>navigation.navigate('HomeScreen2')} />
       </TouchableOpacity>
       <TouchableOpacity style={{alignItems:'center',margin:15}}>
         <Text style={{fontSize:16,fontWeight:'500',color:'#9D9D9D'}}>Skip for now</Text>

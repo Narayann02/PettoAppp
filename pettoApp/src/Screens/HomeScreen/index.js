@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {
   Image,
   View,
@@ -11,6 +11,10 @@ import {
 } from 'react-native';
 // import ImagePath from '../../../constants/ImagePath';
 import ImagePath from '../../constants/ImagePath';
+import { setProfileData} from '../../redux/index';
+import { useSelector, useDispatch } from 'react-redux';
+
+
 const Populardata = [
   {
     id: 1,
@@ -24,6 +28,16 @@ const Populardata = [
 ];
 
 const HomeScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+  const Profilestate = useSelector((state) => state.ProfileReducer.data);
+  console.log('Profiledata---------------',Profilestate);
+  useEffect(() => {
+    dispatch(setProfileData());
+}, [])
+
+
+
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View
